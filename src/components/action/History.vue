@@ -1,16 +1,41 @@
 <template>
     <h3>История:</h3>
-    <p v-for="item in history"
-        :key="item.id">
-        <small>{{item.date.getHours()}}:{{item.date.getMinutes()}}:{{item.date.getSeconds()}} {{ item.name }} </small>        
+    <p v-for="item in historyIn"
+        :key="item.date">
+        <small> {{ item.name }} </small>        
     </p>   
 </template>
 
 <script>
+// {{item.date.getHours()}}:{{item.date.getMinutes()}}:{{item.date.getSeconds()}} 
 export default {
-    props: ['history'],
+    created() {
+        this.getHistory();
+    },
 
-   
+    updated() {
+        this.getHistory();
+    },
+    props: ['weblink'],
+
+    data() {
+        return {
+            historyIn: []
+        }
+        
+    },
+    
+    methods: {
+        getHistory() {
+            fetch(this.weblink).then((response) => {
+                if (response.ok) {
+                    return response.json()
+                }
+            }).then((data) => {
+                this.historyIn = data ;
+            })
+        }
+    }
 }
 </script>
 
@@ -19,3 +44,4 @@ export default {
      margin: 0;
  }
 </style>
+

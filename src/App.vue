@@ -2,7 +2,7 @@
     <user-status :iswork="isWork"/>
     <loot :loot="currentMineral"/>
     <base-button type="button" :disabled="isWork" @some-action="startWork">Собирать</base-button>
-    <history :history="history"/>    
+    <history :weblink="webLink"/>    
 </template>
 
 <script>
@@ -49,10 +49,10 @@ export default {
                     uri: 'almaz',
                     chance: 10
                 }
-            ],
-            history: [],
+            ],            
             isWork: false,
-            currentMineral: null
+            currentMineral: null,
+            webLink: 'https://mining-cf567-default-rtdb.firebaseio.com/historyMinerals.json'
         }
     },
 
@@ -80,9 +80,19 @@ export default {
                 this.currentMineral = this.minerals[rand];
 
                 historyResult.name = this.minerals[rand].name;                
-            }
+            }       
 
-            this.history.push(historyResult);
+            this.posthistory(historyResult);
+        },
+
+        posthistory(body) {
+            fetch(this.webLink, {
+                method: 'POST',
+                header: {
+                    'Content-Type': 'applcation/json'
+                },
+                body: JSON.stringify(body)
+            })
         }
     }
 }
