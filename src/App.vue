@@ -69,10 +69,12 @@ export default {
 
         randomChoose() {
             let isDropRand = getRandom(1, 4);
+            let date = new Date();
+            let normalDate = date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
 
             let historyResult = {
                 name: 'Ничего не найдено',
-                date: new Date()
+                date: normalDate
             };
 
             if(isDropRand % 2 === 0) {

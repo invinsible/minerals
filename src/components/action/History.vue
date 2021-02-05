@@ -2,7 +2,7 @@
     <h3>История:</h3>
     <p v-for="item in historyIn"
         :key="item.date">
-        <small> {{ item.name }} </small>        
+        <small>({{item.date}}) {{ item.name }} </small>        
     </p>   
 </template>
 
