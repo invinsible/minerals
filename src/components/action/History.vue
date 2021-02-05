@@ -7,7 +7,6 @@
 </template>
 
 <script>
-// {{item.date.getHours()}}:{{item.date.getMinutes()}}:{{item.date.getSeconds()}} 
 export default {
     created() {
         this.getHistory();
