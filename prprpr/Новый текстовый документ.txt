@@ -1,0 +1,2 @@
+Выгрузка
+***domain***/import/csv.php?file=/import/out.csv&fields=article,tv45,tv53,tv56&update=1&key=article&debug=0&delimeter=;
