@@ -1,8 +1,8 @@
 <template>
-    <user-status :iswork="isWork"/>
+    <user-status :iswork="isWork" :tired="tired"/>    
+    <base-button type="button" :disabled="isWork || tired >= 39" @some-action="startWork">Собирать</base-button>
     <loot :loot="currentMineral"/>
-    <base-button type="button" :disabled="isWork" @some-action="startWork">Собирать</base-button>
-    <history :weblink="webLink"/>    
+    <history :historyArray="historyArray"/>    
 </template>
 
 <script>
@@ -52,17 +52,42 @@ export default {
             ],            
             isWork: false,
             currentMineral: null,
-            webLink: 'https://mining-cf567-default-rtdb.firebaseio.com/historyMinerals.json'
+            tired: 0,
+            historyArray: [],
+            
+            interval: 0,
         }
     },
 
+    watch: {
+       tired(value) {
+          if(value > 0) {
+              this.interval = setTimeout(() => {
+                  this.tired -= 3;                  
+              }, 10000);
+          }
+       },
+       isWork(value) {
+           if(value) {
+               clearInterval(this.interval)
+           }
+       }       
+    },
+
     methods: {
+        
         startWork() {
+            if(this.tired === 39) {
+                console.log('вы слшком устали');
+                return
+            }
+
             this.currentMineral = null;
             this.isWork = !this.isWork;
 
             setTimeout(() => {
                 this.isWork = false;
+                this.tired += 3;
                 this.randomChoose();
             }, 2000);
         },
@@ -78,23 +103,17 @@ export default {
             };
 
             if(isDropRand % 2 === 0) {
-                let rand = getRandom(0, this.minerals.length);
+                let rand = getRandom(0, this.minerals.length - 1);
                 this.currentMineral = this.minerals[rand];
 
                 historyResult.name = this.minerals[rand].name;                
-            }       
-
-            this.posthistory(historyResult);
+            }
+            
+            this.pushHistory(historyResult)           
         },
 
-        posthistory(body) {
-            fetch(this.webLink, {
-                method: 'POST',
-                header: {
-                    'Content-Type': 'applcation/json'
-                },
-                body: JSON.stringify(body)
-            })
+        pushHistory(obj) {
+            this.historyArray.push(obj);
         }
     }
 }
